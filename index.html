@@ -3,42 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEBIZ X POC - Demo by Jeff</title>
+    <title>GEBIZ X - Procurement Documents</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span class="logo-text">GEBIZ</span>
-                <span class="logo-x">X</span>
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-mark">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="28" height="28" rx="7" fill="#06b6d4"/>
+                        <path d="M7 14.5C7 11.5 9.5 9 12.5 9H16V11.5H12.5C10.8 11.5 9.5 12.8 9.5 14.5C9.5 15.3 9.8 16 10.3 16.5H14V14H16.5V19H12.5C9.5 19 7 16.5 7 14.5Z" fill="white"/>
+                        <path d="M17.5 9L21 9L17.5 14L21 19H17.5L14 14L17.5 9Z" fill="white" opacity="0.9"/>
+                    </svg>
+                </div>
+                <div class="logo-wordmark">
+                    <span class="logo-text">GEBIZ</span><span class="logo-x">X</span>
+                </div>
             </div>
-            <p class="subtitle">AI-powered procurement documents</p>
+            <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar" data-tooltip="Close sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="new-spec">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <span class="nav-label">New Specification</span>
+            </a>
+        </nav>
+        
+        <!-- Divider -->
+        <div class="sidebar-divider"></div>
+        
+        <!-- Recent Projects Section -->
+        <div class="recent-projects-section">
+            <h3 class="section-title">Recent Projects</h3>
+            <div id="projectsList" class="projects-list"></div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>AI POC</h1>
+                <p>AI-powered procurement functional specifications</p>
+            </div>
         </header>
 
-        <main>
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Input Panel -->
             <div class="input-panel">
                 <h2>Generate Document</h2>
-                <form id="documentForm">
+                <form id="documentForm" novalidate>
                     <div class="input-group">
+                        <label for="agency">Select your Agency</label>
                         <select id="agency" required>
-                            <option value="">Select your Agency</option>
+                            <option value="">Choose an agency...</option>
                             <option value="moe">MOE</option>
                             <option value="htx">HTX</option>
                             <option value="vital">VITAL</option>
                         </select>
+                        <div class="field-error hidden" id="agency-error">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Select an agency to continue
+                        </div>
                     </div>
 
                     <div class="input-group">
+                        <label for="budgetRange">Budget Range</label>
                         <select id="budgetRange" required>
-                            <option value="">Budget Range</option>
+                            <option value="">Select budget...</option>
                             <option value="6k-90k">$6,000 to $90,000</option>
                         </select>
+                        <div class="field-error hidden" id="budget-error">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Choose a budget range to continue
+                        </div>
                     </div>
 
                     <div class="input-group">
+                        <label for="specificRequirements">Requirements</label>
                         <textarea id="specificRequirements" 
-                                placeholder="Describe your requirements..."></textarea>
+                                placeholder="Describe your requirements..."
+                                rows="8"></textarea>
+                        <div class="helper-text">
+                            Provide detailed scope, objectives, technical specifications, compliance needs, delivery timeline, and evaluation priorities.
+                        </div>
                     </div>
 
                     <button type="submit" id="generateBtn" class="generate-btn">
@@ -48,13 +109,27 @@
                 </form>
             </div>
 
+            <!-- Output Panel -->
             <div class="output-panel">
                 <div id="outputContainer" class="hidden">
                     <div class="output-header">
                         <h3>Generated Document</h3>
                         <div class="actions">
-                            <button id="copyBtn" class="action-btn">Copy</button>
-                            <button id="downloadBtn" class="action-btn">Download</button>
+                            <button id="copyBtn" class="action-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                </svg>
+                                Copy
+                            </button>
+                            <button id="downloadBtn" class="action-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download
+                            </button>
                         </div>
                     </div>
                     <div id="documentOutput" class="document"></div>
@@ -63,6 +138,12 @@
                 <div id="placeholderContent" class="placeholder">
                     <div class="placeholder-icon">📄</div>
                     <p>Your generated document will appear here</p>
+                    <p class="placeholder-subtext">Fill in the form and click Generate to get started</p>
+                </div>
+
+                <div id="loadingState" class="loading-state hidden">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Generating document...</p>
                 </div>
 
                 <div id="errorContainer" class="error hidden">
@@ -70,8 +151,8 @@
                     <button id="retryBtn" class="retry-btn">Try again</button>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
